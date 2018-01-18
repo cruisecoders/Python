@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block script %}
+$(document).ready(function(){
+$("button").on("click",function(){
+  location.reload();
+  $.ajax({
+      type: "GET",
+      dataType: "json",
+      data: {CsrfViewMiddleware: '{{ csrf_token }}'},
+      url: "http://127.0.0.1:8000/hn/",
+    });
+  });
+})
+{% endblock script %}
+{% block content %}
+<table class="table" id="hn_title">
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Title</th>
+      <th>Points</th>
+      <th>Type</th>
+      <th>Confidence</th>
+  </tr>
+</thead>
+{% for obj in data %}
+<tbody>
+    <tr>
+      {% if obj.title is not Null %}
+        <th>{{ obj.username }}</th>
+        <td><a href="{{ obj.url }}">{{ obj.title }}</a></td>
+        <td>{{ obj.score }}</td>
+        <td>{{ obj.hn_type }}
+        <td>{{ obj.sentiments }}</td>
+      {% endif %}
+    </tr>
+  </tbody>
+  {% endfor %}
+</table>
+<button class ="button">Refresh</button>
+ {% endblock %}
